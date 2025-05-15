@@ -14,55 +14,6 @@
 
     static int CreateWeatherStationData()
     {
-
-        var stations = CreateUniqueWeatherStations();
-
-        /*
-         * The text file contains temperature values for a range of weather stations. 
-         * Each row is one measurement in the format <string: station name>;<double: measurement>, 
-         * with the measurement value having exactly one fractional digit.
-         */
-
-        // Loop through stations and create a temp each
-        //  iteration and go until hitting 1 billion ?
-
-        string weatherDataFile = "Data/station_data.csv";
-        int fractionalNumberSize = 1;
-        int maxTempInt = 99;
-        int minTempInt = -99;
-        int recordMax = 1_000_000_000;
-        int records = 0;
-
-        if (File.Exists(weatherDataFile))
-            File.Delete(weatherDataFile);
-
-        using (var stream = new StreamWriter(weatherDataFile))
-        {
-            while (records < recordMax)
-            {
-                var rand = new Random();
-                foreach (var station in stations)
-                {
-                    if (records >= recordMax)
-                    {
-                        break;
-                    }
-
-                    var randInt = rand.Next(minTempInt, maxTempInt);
-                    var randFractional = Double.Round(rand.NextDouble(), fractionalNumberSize);
-                    var temp = randInt + randFractional;
-
-                    stream.WriteLine(station + ";" + temp.ToString());
-                    records++;
-                }
-            }
-        }
-
-        return 1;
-    }
-
-    static HashSet<string> CreateUniqueWeatherStations()
-    {
         HashSet<string> stations = new HashSet<string>();
 
         if (!File.Exists("Data/weather_stations.csv"))
@@ -95,6 +46,43 @@
             throw new InvalidDataException("Weather station file was empty");
         }
 
-        return stations;
+        /*
+         * The text file contains temperature values for a range of weather stations. 
+         * Each row is one measurement in the format <string: station name>;<double: measurement>, 
+         * with the measurement value having exactly one fractional digit.
+         */
+
+        string weatherDataFile = "Data/station_data.csv";
+        int fractionalNumberSize = 1;
+        int maxTempInt = 99;
+        int minTempInt = -99;
+        int recordMax = 1_000_000_000;
+        int records = 0;
+
+        if (File.Exists(weatherDataFile))
+            File.Delete(weatherDataFile);
+
+        using (var stream = new StreamWriter(weatherDataFile))
+        {
+            while (records < recordMax)
+            {
+                var rand = new Random();
+                foreach (var station in stations)
+                {
+                    if (records >= recordMax)
+                    {
+                        break;
+                    }
+
+                    var randInt = rand.Next(minTempInt, maxTempInt);
+                    var randFractional = Double.Round(rand.NextDouble(), fractionalNumberSize);
+                    var temp = randInt + randFractional;
+
+                    stream.WriteLine(station + ";" + temp.ToString());
+                    records++;
+                }
+            }
+        }
+        return 1;
     }
 }
