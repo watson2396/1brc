@@ -1,22 +1,21 @@
 ﻿public class Program
 {
-
     static void Main(string[] args)
     {
         Console.WriteLine("Hello, World!");
 
         // TODO: parsing logic for setting create/recreate from command line
-        CreateWeatherStationData(true);
+        if (true) 
+        {
+            CreateWeatherStationData();
+        }
         Console.WriteLine("GoodBye, World!");
     }
 
-    static int CreateWeatherStationData(bool recreate)
+    static int CreateWeatherStationData()
     {
 
-        if (!recreate)
-            return 1;
-
-        var stations = CreateUniqueWeatherStations(recreate);
+        var stations = CreateUniqueWeatherStations();
 
         /*
          * The text file contains temperature values for a range of weather stations. 
@@ -62,33 +61,9 @@
         return 1;
     }
 
-    static List<string> CreateUniqueWeatherStations(bool recreate)
+    static HashSet<string> CreateUniqueWeatherStations()
     {
-        string stationNameFile = "Data/weather_station_names.csv";
-        List<string> stations = new List<string>();
-
-        if (File.Exists(stationNameFile) && !recreate)
-        {
-            using (var fileStream = File.OpenRead(stationNameFile))
-            {
-                using (var stream = new StreamReader(fileStream, System.Text.Encoding.UTF8, true))
-                {
-                    String? line;
-
-                    while ((line = stream.ReadLine()) != null)
-                    {
-                        var station = line;
-
-                        if (!station.StartsWith("#"))
-                        {
-                            stations.Add(station);
-                        }
-                    }
-                }
-            }
-
-            return stations;
-        }
+        HashSet<string> stations = new HashSet<string>();
 
         if (!File.Exists("Data/weather_stations.csv"))
         {
@@ -118,18 +93,6 @@
         {
             Console.WriteLine("Data/weather_station.csv is empty or something else went wrong");
             throw new InvalidDataException("Weather station file was empty");
-        }
-
-        if (File.Exists(stationNameFile))
-            File.Delete(stationNameFile);
-
-        using (var stream = new StreamWriter(stationNameFile))
-        {
-            foreach (var station in stations)
-            {
-                stream.WriteLine($"{station}");
-            }
-            Console.WriteLine($"File: {stationNameFile} has been created");
         }
 
         return stations;
