@@ -1,5 +1,7 @@
 ﻿public class Program
 {
+    public static string _weatherDataFile = "Data/station_data.csv";
+
     static void Main(string[] args)
     {
         Console.WriteLine("Hello, World!");
@@ -9,7 +11,33 @@
         {
             CreateWeatherStationData();
         }
+        Challenge();
         Console.WriteLine("GoodBye, World!");
+    }
+
+    static int Challenge()
+    {
+        var stations = new List<StationData>();
+
+        using (var fileStream = File.OpenRead(_weatherDataFile))
+        {
+            using (var stream = new StreamReader(fileStream, System.Text.Encoding.UTF8, true))
+            {
+                String? line;
+
+                while ((line = stream.ReadLine()) != null)
+                {
+                    var lineArray = line.Split(';');
+                    var station = lineArray[0];
+                    var reading = lineArray[1];
+
+
+                    stations.Add(station);
+                }
+            }
+        }
+
+        return 1;
     }
 
     static int CreateWeatherStationData()
@@ -52,17 +80,16 @@
          * with the measurement value having exactly one fractional digit.
          */
 
-        string weatherDataFile = "Data/station_data.csv";
         int fractionalNumberSize = 1;
         int maxTempInt = 99;
         int minTempInt = -99;
         int recordMax = 1_000_000_000;
         int records = 0;
 
-        if (File.Exists(weatherDataFile))
-            File.Delete(weatherDataFile);
+        if (File.Exists(_weatherDataFile))
+            File.Delete(_weatherDataFile);
 
-        using (var stream = new StreamWriter(weatherDataFile))
+        using (var stream = new StreamWriter(_weatherDataFile))
         {
             while (records < recordMax)
             {
@@ -85,4 +112,13 @@
         }
         return 1;
     }
+}
+
+public struct StationData
+{
+    public string StationName;
+    public double Min;
+    public double Max;
+    public double Sum;
+    public int Count;
 }
