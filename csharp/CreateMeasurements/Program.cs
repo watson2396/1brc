@@ -17,7 +17,7 @@
 
     static int Challenge()
     {
-        var stations = new List<StationData>();
+    var stations = new Dictionary<string, StationData>();
 
         using (var fileStream = File.OpenRead(_weatherDataFile))
         {
@@ -31,8 +31,19 @@
                     var station = lineArray[0];
                     var reading = lineArray[1];
 
+                    StationData data = new StationData();
+                    if (stations.ContainsKey(station)) 
+                    {
+                        data = stations[station];
+                    } else 
+                    {
+                        data.Sum = 0;
+                        data.Count = 1;
+                        data.Min = 0;
+                        data.Max = 0;
+                    }
 
-                    stations.Add(station);
+
                 }
             }
         }
@@ -116,7 +127,6 @@
 
 public struct StationData
 {
-    public string StationName;
     public double Min;
     public double Max;
     public double Sum;
