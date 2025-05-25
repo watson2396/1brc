@@ -29,7 +29,7 @@
                 {
                     var lineArray = line.Split(';');
                     var station = lineArray[0];
-                    var reading = lineArray[1];
+                    var reading = Convert.ToDouble(lineArray[1]);
 
                     StationData data = new StationData();
                     if (stations.ContainsKey(station)) 
@@ -42,8 +42,10 @@
                         data.Min = 0;
                         data.Max = 0;
                     }
-
-
+                    data.Sum += reading;
+                    data.Count++;
+                    data.Min = data.Min < reading ? data.Min : reading;
+                    data.Max = data.Max >  reading ? data.Max : reading;
                 }
             }
         }
