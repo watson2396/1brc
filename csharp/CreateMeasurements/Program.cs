@@ -22,8 +22,6 @@
 
         using (var fileStream = File.OpenRead(_weatherDataFile))
         {
-
-            Console.WriteLine("open file");
             using (var stream = new StreamReader(fileStream, System.Text.Encoding.UTF8, true))
             {
                 String? line;
@@ -53,16 +51,15 @@
                     stations[station] = data;
                 }
             }
-            Console.WriteLine("close file");
         }
 
         Console.WriteLine(stations.Count);
         foreach (var station in stations)
         {
-            Console.WriteLine($"Station: {station.Key}, reading: {station.Value.Min}/{station.Value.Sum / station.Value.Count}/{station.Value.Max}");
+            Console.WriteLine($"{station.Key}, {station.Value.Min}/{station.Value.Sum / station.Value.Count}/{station.Value.Max}/{station.Value.Count}/{station.Value.Sum}");
         }
 
-        Console.WriteLine("end challenge");
+        Console.WriteLine("End challenge");
         return 1;
     }
 
